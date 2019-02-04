@@ -27,7 +27,6 @@ class metrics:
                                           'parent_created_utc':comment.parent().created_utc},
                                          ignore_index=True)
 
-        print(author_df.head(20))
         return author_df
 
 
@@ -44,7 +43,6 @@ class metrics:
 
     def getAvgReplyTime(self, comment_df):
         comment_df['delta'] = comment_df['created_utc'] - comment_df['parent_created_utc']
-        print(comment_df['delta'].mean())
         avgReplyTime = comment_df['delta'].mean()
         return avgReplyTime
 
