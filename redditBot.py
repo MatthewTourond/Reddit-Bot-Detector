@@ -3,6 +3,7 @@ import config
 import logging
 import time
 import os
+from metrics import metrics
 
 def botLogin():
     try:
@@ -25,22 +26,33 @@ def runBot(r, commentsRepliedTo):
         if "!isBot" in comment.body and comment.id not in commentsRepliedTo:
             logging.info('Comment found')
             logging.info('Comment.id is: ' + comment.id)
-            #comment.reply("found")
+
+            met = metrics()
+            authHist = met.getCommentHistory(r, comment.parent().author)
+            #comment.reply("similarity score: " + str(met.getAvgCosineSimilarity(authHist)))
+            #comment.reply("avg reply time: " + str(met.getAvgReplyTime(authHist) + "seconds"))
+
             commentsRepliedTo.append(comment.id)
             with open("commentsRepliedTo.txt", "a") as f:
                 f.write(comment.id + "\n")
+
     time.sleep(20)
 
 def getSavedComments():
-    if not os.path.isfile("commentsRepliedTo.txt"):
+    #windows os makes me :(
+    os.chdir('c:\\Users\\matt\\Desktop')
+
+    if not os.path.isfile('commentsRepliedTo.txt'):
         commentsRepliedTo = []
+        return commentsRepliedTo
+
     with open("commentsRepliedTo.txt", "r") as f:
         commentsRepliedTo = f.read()
         commentsRepliedTo = commentsRepliedTo.split("\n")
         commentsRepliedTo = filter(None, commentsRepliedTo)
         return commentsRepliedTo
 
+
 commentsRepliedTo = getSavedComments()
-print(commentsRepliedTo)
 r = botLogin()
 runBot(r, commentsRepliedTo)
