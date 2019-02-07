@@ -5,6 +5,7 @@ import time
 import os
 from metrics import metrics
 
+
 def botLogin():
     try:
         r = praw.Reddit(username = config.username,
@@ -29,8 +30,9 @@ def runBot(r, commentsRepliedTo):
 
             met = metrics()
             authHist = met.getCommentHistory(r, comment.parent().author)
-            #comment.reply("similarity score: " + str(met.getAvgCosineSimilarity(authHist)))
-            #comment.reply("avg reply time: " + str(met.getAvgReplyTime(authHist) + "seconds"))
+            authText = met.getAuthorText(authHist)
+            comment.reply("similarity score: " + str(met.getAvgCosineSimilarity(authText)))
+            #comment.reply("avg reply time: " + str(met.getAvgReplyTime(authHist['body'].tolist()) + "seconds"))
 
             commentsRepliedTo.append(comment.id)
             with open("commentsRepliedTo.txt", "a") as f:
