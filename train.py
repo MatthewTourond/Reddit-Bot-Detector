@@ -5,6 +5,9 @@ import logging
 import config
 
 
+# Training script for the bot. Gets prediction metrics for every user in a .csv that are
+# fed into a classifier
+
 def Login():
     try:
         r = praw.Reddit(username = config.username,
@@ -19,7 +22,7 @@ def Login():
 
 
 
-training_df = pd.DataFrame(columns = ['author', 'similarity', 'replyTime', 'commentRate'])
+training_df = pd.DataFrame(columns = ['author', 'count_similarity', 'tfidf_similarity', 'comment_rate', 'top_level_proportion'])
 r = Login()
 authors = pd.read_csv('sampleAuthors.csv')
 authors = authors['author'].tolist()
@@ -29,12 +32,15 @@ for auth in authors:
     print(auth)
     user = r.redditor(auth)
     try:
+
         authData = met.getAuthorData(r, user)
         training_df = training_df.append({'author': auth,
-                                          'similarity': met.getAvgCosineSimilarity(authData),
-                                          'replyTime': met.getMedianReplyTime(),
-                                          'commentRate': met.getAvgCommentRate(authData)}, ignore_index=True)
+                                          'count_similarity': met.avgCountCosineSimilarity(authData),
+                                          'tfidf_similarity': met.avgTFIDFCosineSimilarity(authData),
+                                          'comment_rate': met.avgCommentRate(authData),
+                                          'top_level_proportion': met.topLevelProportion(authData),
+                                          'reply_time': met.getMedianReplyTime(authData)}, ignore_index=True)
     except:
-        logging.error('404 HTTP response')
+        logging.error('Deleted Account')
 
-training_df.to_csv('test', index=False)
+training_df.to_csv('test.csv', index=False)
