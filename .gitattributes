@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-static/* linguist-vendored
+*.DetectingRedditBots.ipynb linguist-detectable=false
+*.modelParameterAnalysis.ipynb linguist-detectable=false
