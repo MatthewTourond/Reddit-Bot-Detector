@@ -34,9 +34,7 @@ class bot:
 
         try:
             with open("RF_model_for_bot.pkl", 'rb') as file:
-                print(data)
                 model = pickle.load(file)
-                print("loaded")
                 return model.predict_proba(data)
         except:
             logging.error('No .pkl file found')
@@ -47,7 +45,6 @@ class bot:
         commentsRepliedTo = []
 
         for mention in r.inbox.mentions(limit = 25):
-            print('stuff')
             logging.info('Comment found')
             logging.info('Comment.id is: ' + mention.id)
 
@@ -63,21 +60,6 @@ class bot:
                           " is a bot with a probability of " +
                           str(botProbability) + "%")
 
-            commentsRepliedTo.append(mention.id)
-            with open("commentsRepliedTo.txt", "a") as f:
-                f.write(mention.id + "\n")
-
-
-def getSavedComments():
-    if not os.path.isfile("commentsRepliedTo.txt"):
-        commentsRepliedTo = []
-    with open("commentsRepliedTo.txt", "r") as f:
-        commentsRepliedTo = f.read()
-        commentsRepliedTo = commentsRepliedTo.split("\n")
-        commentsRepliedTo = filter(None, commentsRepliedTo)
-        return commentsRepliedTo
-
-commentsRepliedTo = getSavedComments()
 
 redditBot = bot()
 r = redditBot.botLogin()
