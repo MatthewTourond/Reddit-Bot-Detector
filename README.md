@@ -1,4 +1,4 @@
-# Detecting-Reddit-Bots
+# Reddit-Bot-Detector
 
 Reddit bot that detects if a user is a bot based on their comment history. Returns a percent probability that a user is bot. Called by mentioning /u/some_bot_checker.
 
