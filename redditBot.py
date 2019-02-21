@@ -39,10 +39,9 @@ class bot:
         except:
             logging.error('No .pkl file found')
 
-    #
+
     def runBot(self, r):
         logging.info('Running...')
-        commentsRepliedTo = []
 
         for mention in r.inbox.mentions(limit = 25):
             logging.info('Comment found')
@@ -54,11 +53,12 @@ class bot:
             authData = met.getAuthorData(r, parentAuth)
 
             botProbability = str(self.__makePrediction(met.aggregateMetrics(authData))[:, 1])
-            botProbability = botProbability[1:-5]
 
+            botProbability = botProbability.replace('[', '')
+            botProbability = botProbability.replace(']', '')
             mention.reply("User " + str(parentAuth) +
                           " is a bot with a probability of " +
-                          str(botProbability) + "%")
+                          str(botProbability) + "0%")
 
 
 redditBot = bot()
